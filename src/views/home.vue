@@ -402,33 +402,64 @@ const registerReveal = (el) => {
 }
 
 let sectionObserver
+let anchorLinkHandlers = []
 onMounted(() => {
-  if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
-    return
-  }
-
-  hasRevealObserver.value = true
-  sectionObserver = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible')
-          sectionObserver.unobserve(entry.target)
+  if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+    hasRevealObserver.value = true
+    sectionObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            sectionObserver.unobserve(entry.target)
+          }
         }
-      }
-    },
-    { threshold: 0.16, rootMargin: '0px 0px -8% 0px' },
-  )
+      },
+      { threshold: 0.16, rootMargin: '0px 0px -8% 0px' },
+    )
 
-  for (const node of revealNodes.value) {
-    sectionObserver.observe(node)
+    for (const node of revealNodes.value) {
+      sectionObserver.observe(node)
+    }
   }
+
+  const anchorLinks = Array.from(document.querySelectorAll('a[href^="#"]'))
+  anchorLinkHandlers = anchorLinks.map((link) => {
+    const handler = (event) => {
+      const href = link.getAttribute('href')
+      if (!href || href === '#') {
+        return
+      }
+
+      const target = document.querySelector(href)
+      if (!target) {
+        return
+      }
+
+      event.preventDefault()
+      const targetTop = target.getBoundingClientRect().top + window.scrollY
+      window.scrollTo({
+        top: Math.max(0, targetTop - 88),
+        behavior: 'smooth',
+      })
+      target.classList.add('is-visible')
+      history.replaceState(null, '', href)
+    }
+
+    link.addEventListener('click', handler)
+    return { link, handler }
+  })
 })
 
 onBeforeUnmount(() => {
   if (sectionObserver) {
     sectionObserver.disconnect()
   }
+
+  for (const item of anchorLinkHandlers) {
+    item.link.removeEventListener('click', item.handler)
+  }
+  anchorLinkHandlers = []
 })
 </script>
 
