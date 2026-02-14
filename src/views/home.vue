@@ -203,7 +203,8 @@
             <a href="#hero">用戶指南</a>
             <a href="#features">常見問題</a>
             <a href="mailto:hello@strawmoneybook.app">聯繫開發者</a>
-            <a href="#privacy-note">隱私權政策</a>
+            <RouterLink to="/terms-of-service">服務條款</RouterLink>
+            <RouterLink to="/privacy-policy">隱私權政策</RouterLink>
           </div>
           <p id="privacy-note" class="privacy-note">
             本站採本地優先與可匯出策略，不綁定你的資料所有權。Android 安裝提示為系統防護行為，請僅透過官網下載。
