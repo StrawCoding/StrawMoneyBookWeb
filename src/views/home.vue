@@ -655,6 +655,11 @@ onBeforeUnmount(() => {
   padding: clamp(1rem, 2.3vw, 1.6rem);
 }
 
+.panel[id],
+#privacy-note {
+  scroll-margin-top: 6.4rem;
+}
+
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
