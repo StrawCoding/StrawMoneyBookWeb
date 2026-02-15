@@ -13,6 +13,12 @@ jobs:
       run: npm install
     - name: 打包
       run: npm run build
+    - name: 產生 SPA fallback 與網域設定
+      run: |
+        cp dist/index.html dist/404.html
+        if [ -f CNAME ]; then
+          cp CNAME dist/CNAME
+        fi
     - name: 發布分支 Web-Page
       uses: JamesIves/github-pages-deploy-action@v4
       with: 

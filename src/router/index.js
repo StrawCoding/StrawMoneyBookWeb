@@ -21,6 +21,10 @@ const router = createRouter({
       name: 'privacy',
       component: PrivacyView,
     },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
+    },
   ],
 })
 
