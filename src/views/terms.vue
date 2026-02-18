@@ -96,7 +96,10 @@
         <p>本條款之解釋與適用，以中華民國（臺灣）法律為準。因本條款或本服務所生之爭議，以臺灣臺北地方法院為第一審管轄法院。</p>
       </section>
 
-      <RouterLink class="back-link" to="/">返回首頁</RouterLink>
+      <div class="link-group">
+        <RouterLink class="back-link" to="/preview">預先體驗版</RouterLink>
+        <RouterLink class="back-link" to="/">返回首頁</RouterLink>
+      </div>
     </div>
   </main>
 </template>
@@ -104,42 +107,105 @@
 <style scoped>
 .legal-page {
   min-height: 100vh;
-  background: #0f1220;
-  color: #f3f4f8;
-  padding: 2rem 1rem 3rem;
+  background: #000;
+  color: #f3f6ff;
+  padding: clamp(1.5rem, 3vw, 2.6rem) 1rem 3rem;
 }
 
 .legal-container {
-  width: min(860px, 100%);
+  width: min(940px, 100%);
   margin: 0 auto;
+  padding: clamp(1rem, 2.5vw, 1.6rem);
+  border-radius: 22px;
+  background: rgba(10, 15, 30, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
   line-height: 1.72;
 }
 
 h1 {
-  font-size: clamp(1.4rem, 3.8vw, 2rem);
-  margin-bottom: 1rem;
+  font-size: clamp(1.45rem, 3.8vw, 2.2rem);
+  margin-bottom: 1.1rem;
+  letter-spacing: 0.015em;
+}
+
+.legal-container > p {
+  color: #d8def0;
+  margin: 0.42rem 0;
+}
+
+.legal-container > p:nth-of-type(-n + 4) {
+  display: inline-flex;
+  margin-right: 0.6rem;
+  margin-bottom: 0.55rem;
+  padding: 0.33rem 0.72rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #c9d1ea;
+  font-size: 0.86rem;
 }
 
 h2 {
-  margin-top: 1.2rem;
-  margin-bottom: 0.5rem;
-  font-size: 1.08rem;
+  margin-top: 0;
+  margin-bottom: 0.65rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+  color: #f7d77a;
 }
 
 p,
 li {
-  color: #d4d9e5;
+  color: #d6dcef;
 }
 
 ul {
   margin: 0;
-  padding-left: 1.2rem;
+  padding-left: 1.15rem;
+}
+
+section {
+  margin-top: 1rem;
+  padding: 1rem 1.05rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .back-link {
-  display: inline-block;
-  margin-top: 1.6rem;
-  color: #f2c94c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.2rem;
+  padding: 0.52rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #f8df8f;
   text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.back-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(248, 223, 143, 0.6);
+  background: rgba(248, 223, 143, 0.08);
+}
+
+.link-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.6rem;
+}
+
+@media (max-width: 640px) {
+  .legal-container {
+    padding: 0.95rem;
+  }
+
+  section {
+    padding: 0.85rem 0.88rem;
+  }
 }
 </style>

@@ -46,6 +46,7 @@
               >
                 下載 Android 版本
               </a>
+              <RouterLink to="/preview" class="btn btn-primary">填寫預先體驗版</RouterLink>
               <a href="#features" class="btn btn-secondary">觀看 30 秒功能演示</a>
             </div>
 
@@ -203,6 +204,7 @@
             <a href="#hero">用戶指南</a>
             <a href="#features">常見問題</a>
             <a href="mailto:hello@strawmoneybook.app">聯繫開發者</a>
+            <RouterLink to="/preview">預先體驗版</RouterLink>
             <RouterLink to="/terms-of-service">服務條款</RouterLink>
             <RouterLink to="/privacy-policy">隱私權政策</RouterLink>
           </div>
@@ -466,7 +468,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .landing {
-  --bg-primary: #121212;
+  --bg-primary: #000000;
   --bg-secondary: rgba(30, 30, 30, 0.92);
   --bg-card: #1b1b1b;
   --bg-card-soft: #202020;

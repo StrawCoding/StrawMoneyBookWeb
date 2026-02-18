@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/home.vue'
 import TermsView from '../views/terms.vue'
 import PrivacyView from '../views/privacy.vue'
+import PreviewView from '../views/preview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,11 @@ const router = createRouter({
       path: '/privacy-policy',
       name: 'privacy',
       component: PrivacyView,
+    },
+    {
+      path: '/preview',
+      name: 'preview',
+      component: PreviewView,
     },
     {
       path: '/:pathMatch(.*)*',
