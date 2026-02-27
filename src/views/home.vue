@@ -46,7 +46,6 @@
               >
                 下載 Android 版本
               </a>
-              <RouterLink to="/preview" class="btn btn-primary">填寫預先體驗版</RouterLink>
               <a href="#features" class="btn btn-secondary">觀看 30 秒功能演示</a>
             </div>
 
