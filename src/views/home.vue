@@ -7,27 +7,32 @@
           <span class="brand-name">StrawMoneyBook</span>
         </a>
 
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#features">功能亮點</a>
+          <a href="#budget">預算分析</a>
+          <a href="#flows">金流流程</a>
+          <a href="#security">備份保障</a>
+          <a href="#download" class="pill-link">立即下載</a>
+        </nav>
+
         <button type="button" class="theme-toggle" :aria-pressed="theme === 'light'" @click="toggleTheme">
-          <span class="toggle-track">
-            <span class="toggle-thumb">
-              <span class="sun-icon">☀</span>
-              <span class="moon-icon">☾</span>
-            </span>
-          </span>
-          <span class="toggle-text">{{ theme === 'dark' ? 'Night Owl' : 'Morning Clarity' }}</span>
+          <span class="theme-toggle-icon" aria-hidden="true">{{ theme === 'dark' ? '☾' : '☀' }}</span>
+          <span class="toggle-text">{{ theme === 'dark' ? '深色模式' : '淺色模式' }}</span>
         </button>
       </header>
 
       <main class="content">
         <section id="hero" class="panel hero reveal" :ref="registerReveal">
           <div>
-            <p class="kicker">From Bookkeeping to Cashflow Control</p>
-            <h1 class="hero-title">不只是記帳，而是掌控生活金流。</h1>
+            <p class="kicker">Cashflow, Not Just Logging</p>
+            <h1 class="hero-title">把記一筆帳，升級成管理一整段金流流程。</h1>
             <p class="hero-subtitle">
-              整合預算、借貸管理與報銷流程。StrawMoneyBook 讓你的每一分錢都有跡可循。
+              StrawMoneyBook 把日常收支、預算控管、借貸追蹤、報銷請款、存錢管理與備份還原整合在同一個 App，
+              讓你不只知道花了多少，也知道每一筆錢正經過什麼流程。
             </p>
 
             <div class="hero-actions">
+              <a href="#features" class="btn btn-secondary">了解功能亮點</a>
               <a
                 class="btn btn-secondary"
                 :class="{ disabled: !hasIosDownload }"
@@ -46,25 +51,33 @@
               >
                 下載 Android 版本
               </a>
-              <a href="#features" class="btn btn-secondary">觀看 30 秒功能演示</a>
             </div>
 
             <ul class="hero-bullets">
               <li>多帳本分流</li>
               <li>AI 自然語言記帳</li>
-              <li>借貸與報銷雙流程</li>
+              <li>借貸 / 報銷 / 請款</li>
+              <li>存錢罐與備份還原</li>
             </ul>
+
+            <div class="hero-metrics">
+              <article v-for="item in heroMetrics" :key="item.label" class="metric-card">
+                <p>{{ item.label }}</p>
+                <strong>{{ item.value }}</strong>
+                <span>{{ item.detail }}</span>
+              </article>
+            </div>
           </div>
 
           <aside class="phone-shell">
             <div class="phone-head">
-              <span>Dashboard</span>
+              <span>Quick Add</span>
               <strong>Today</strong>
             </div>
             <div class="balance-card">
-              <p>可用資金</p>
+              <p>本月可支配資產</p>
               <h3>NT$ 38,420</h3>
-              <small>已套用本月預算規劃</small>
+              <small>代收與存錢罐已分流，不混入可花餘額</small>
             </div>
             <ul class="entry-stream">
               <li
@@ -85,22 +98,25 @@
         </section>
 
         <section class="panel reveal" :ref="registerReveal">
-          <p class="section-tag">Why StrawMoneyBook</p>
-          <h2 class="section-title">為何選擇我們</h2>
-          <p class="section-subtitle">解決日常記帳混亂，把每個財務場景收斂成可控流程。</p>
+          <p class="section-tag">Core Value</p>
+          <h2 class="section-title">你需要的，不只是收入和支出</h2>
+          <p class="section-subtitle">
+            很多記帳工具只能幫你記錄數字。StrawMoneyBook 更重視的是管理與追蹤，
+            把常見的金流場景收斂成同一套可持續使用的流程。
+          </p>
           <div class="pain-grid">
-            <article v-for="item in painPoints" :key="item.title" class="pain-card">
+            <article v-for="item in valueCards" :key="item.title" class="pain-card">
               <h3>{{ item.title }}</h3>
-              <p class="pain-question">「{{ item.question }}」</p>
-              <p><strong>解法：</strong>{{ item.solution }}</p>
+              <p class="pain-question">{{ item.highlight }}</p>
+              <p>{{ item.description }}</p>
             </article>
           </div>
         </section>
 
         <section id="features" class="panel reveal" :ref="registerReveal">
-          <p class="section-tag">Core Features</p>
-          <h2 class="section-title">核心功能展示</h2>
-          <p class="section-subtitle">游標滑過左側功能，右側手機預覽同步切換。</p>
+          <p class="section-tag">Feature Highlights</p>
+          <h2 class="section-title">為真實生活設計的記帳方式</h2>
+          <p class="section-subtitle">核心功能以互動卡片呈現，快速理解不同金流場景的使用價值。</p>
           <div class="feature-layout">
             <div class="feature-menu">
               <button
@@ -141,11 +157,35 @@
           </div>
         </section>
 
-        <section class="panel advanced reveal" :ref="registerReveal">
-          <p class="section-tag">Professional Flow</p>
-          <h2 class="section-title">為真實生活設計的金流場景</h2>
+        <section id="budget" class="panel reveal" :ref="registerReveal">
+          <p class="section-tag">Budget & Insight</p>
+          <h2 class="section-title">不只知道花了多少，還知道該怎麼控管</h2>
+          <p class="section-subtitle">
+            預算按月份管理，能細看到分類層級，並在分析頁快速切換收入與支出視角，
+            讓你在超支前就先看見風險。
+          </p>
+          <div class="trust-grid insight-grid">
+            <article v-for="item in insightItems" :key="item.title" class="trust-card insight-card">
+              <p class="trust-icon" aria-hidden="true">{{ item.icon }}</p>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.description }}</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="flows" class="panel advanced reveal" :ref="registerReveal">
+          <p class="section-tag">Real-World Flow</p>
+          <h2 class="section-title">借貸、報銷、請款，不再靠備註硬撐</h2>
+          <p class="section-subtitle">
+            一般記帳、暫墊款項與代收抵扣拆開處理，才能讓資產與現金流判讀更準確。
+          </p>
           <div class="flow-rows">
-            <article v-for="(flow, index) in advancedFlows" :key="flow.title" class="flow-row" :class="{ reverse: index % 2 === 1 }">
+            <article
+              v-for="(flow, index) in advancedFlows"
+              :key="flow.title"
+              class="flow-row"
+              :class="{ reverse: index % 2 === 1 }"
+            >
               <div class="flow-graphic">
                 <p class="flow-graphic-title">{{ flow.graphicTitle }}</p>
                 <ol>
@@ -164,9 +204,12 @@
           </div>
         </section>
 
-        <section class="panel reveal" :ref="registerReveal">
-          <p class="section-tag">Security & Data</p>
-          <h2 class="section-title">你的資料，完全自主</h2>
+        <section id="security" class="panel reveal" :ref="registerReveal">
+          <p class="section-tag">Data & Continuity</p>
+          <h2 class="section-title">資料留得住，才能真正長期使用</h2>
+          <p class="section-subtitle">
+            匯出、還原、修復工具與雲端備份都在同一條資料管理路徑上，讓跨裝置延續使用更可靠。
+          </p>
           <div class="trust-grid">
             <article v-for="item in trustItems" :key="item.title" class="trust-card">
               <p class="trust-icon" aria-hidden="true">{{ item.icon }}</p>
@@ -176,9 +219,42 @@
           </div>
         </section>
 
+        <section class="panel reveal" :ref="registerReveal">
+          <p class="section-tag">Who It's For</p>
+          <h2 class="section-title">適合這些使用情境</h2>
+          <p class="section-subtitle">如果你要的不只是單純記錄，這會比一般記帳工具更合適。</p>
+          <div class="feature-layout bottom-layout">
+            <article class="feature-preview audience-card">
+              <div class="feature-preview-screen">
+                <p class="preview-kicker">Why It Matters</p>
+                <h3>你不是只在記一筆帳</h3>
+                <p class="preview-copy">
+                  StrawMoneyBook 的差異化不在單一炫技功能，而在多帳本、預算、借貸、報銷、請款單、
+                  存錢罐、AI 快速輸入與備份還原的整合完整度。
+                </p>
+                <div class="preview-pill-list">
+                  <span v-for="item in differentiationItems" :key="item">{{ item }}</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="feature-preview audience-card">
+              <div class="feature-preview-screen">
+                <p class="preview-kicker">Best Fit</p>
+                <h3>符合這些需求的人會特別有感</h3>
+                <ul class="audience-list">
+                  <li v-for="item in audienceItems" :key="item">{{ item }}</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
         <section id="download" class="panel footer-panel reveal" :ref="registerReveal">
-          <h2 class="section-title">準備好釐清你的財務現狀了嗎？</h2>
-          <p class="section-subtitle">立即下載 StrawMoneyBook，從「記一筆帳」升級為「管理一段完整金流」。</p>
+          <h2 class="section-title">從今天開始，把記帳變成真正可追蹤的金流管理</h2>
+          <p class="section-subtitle">
+            從日常收支，到暫墊款項、借貸往來、儲蓄目標與備份保障，讓每一筆錢都更清楚、更可控。
+          </p>
           <div class="footer-actions">
             <a
               class="download-btn download-btn-ios"
@@ -200,10 +276,6 @@
             </a>
           </div>
           <div class="footer-links">
-            <a href="#hero">用戶指南</a>
-            <a href="#features">常見問題</a>
-            <a href="mailto:hello@strawmoneybook.app">聯繫開發者</a>
-            <RouterLink to="/preview">預先體驗版</RouterLink>
             <RouterLink to="/terms-of-service">服務條款</RouterLink>
             <RouterLink to="/privacy-policy">隱私權政策</RouterLink>
           </div>
@@ -261,90 +333,134 @@ const toggleTheme = () => {
 }
 
 const heroEntries = [
-  { type: 'income', title: '薪資入帳', meta: '中國信託 · 本月', amount: '+NT$ 36,000' },
-  { type: 'expense', title: '午餐牛肉麵', meta: '信用卡 · AI 解析', amount: '-NT$ 250' },
-  { type: 'expense', title: '公司代墊材料', meta: '標記待報銷', amount: '-NT$ 1,800' },
-  { type: 'income', title: '報銷回款', meta: '自動沖銷完成', amount: '+NT$ 1,800' },
+  { type: 'expense', title: '午餐 250', meta: '信用卡 · AI 解析完成', amount: '-NT$ 250' },
+  { type: 'expense', title: '專案代墊材料', meta: '標記待報銷', amount: '-NT$ 1,800' },
+  { type: 'income', title: '報銷回款', meta: '代收抵扣後入帳', amount: '+NT$ 1,800' },
+  { type: 'income', title: '副業請款完成', meta: '請款單自動結案', amount: '+NT$ 12,000' },
 ]
 
-const painPoints = [
+const heroMetrics = [
+  { label: '管理範圍', value: '8+ 金流場景', detail: '記帳、預算、借貸、報銷、請款、存錢與備份整合' },
+  { label: '輸入速度', value: '一句話入帳', detail: 'AI 解析金額、帳戶、分類與備註' },
+  { label: '資料延續', value: '備份可還原', detail: '支援匯出、修復、WebDAV 與 Google Drive' },
+]
+
+const valueCards = [
   {
-    title: '公私不分？',
-    question: '工作代墊款混進生活費，月底對帳總是不準',
-    solution: '多帳本 + 報銷系統，把個人消費與代墊流程分離。',
+    title: '從記錄變成追蹤',
+    highlight: '不只知道花了多少，也知道每一筆錢正卡在哪個流程。',
+    description: '把一般消費、暫墊款項、報銷回款、借貸還款拆開管理，現金流才看得準。',
   },
   {
-    title: '借錢忘記？',
-    question: '朋友借錢、分攤聚餐，這筆帳到底記在哪',
-    solution: '獨立借貸模組，追蹤借出、借入與還款狀態。',
+    title: '從單一帳本變成分流管理',
+    highlight: '個人、家庭、工作、副業可以各自獨立運作。',
+    description: '切換帳本後，首頁、分析、借貸、報銷與備份會同步使用同一帳本脈絡。',
   },
   {
-    title: '輸入繁瑣？',
-    question: '站在收銀台前手忙腳亂找分類',
-    solution: 'AI 自然語言輸入，一句話完成記帳。',
+    title: '從短期使用變成長期可持續',
+    highlight: '匯出、還原、修復與雲端備份都先準備好。',
+    description: '對重度記帳使用者來說，資料能留住、能換機，才算真正能長期依賴。',
   },
 ]
 
 const coreFeatures = [
   {
-    key: 'ai-input',
-    title: 'AI 智慧輸入',
-    description: '「午餐250信用卡牛肉麵」，自動解析金額、帳戶與分類。',
-    previewTag: 'Chat-to-Book',
-    previewTitle: '一句話，完成一筆交易',
-    previewDescription: '自然語句自動拆解，減少輸入摩擦，收銀台前也能 3 秒完成記帳。',
-    pills: ['語義解析', '欄位自填', '可追問缺漏'],
+    key: 'quick-add',
+    title: '快速新增',
+    description: '金額、帳戶、分類、時間、備註、可報銷與附加金額一次完成。',
+    previewTag: 'Quick Add',
+    previewTitle: '一次完成「記帳 + 補充資訊」',
+    previewDescription: '當下就把交易情境記完整，減少事後回補與漏記。',
+    pills: ['備註', '可報銷', '附加金額'],
     rows: [
-      { label: '金額', value: 'NT$ 250' },
-      { label: '分類', value: '餐飲支出' },
-      { label: '帳戶', value: '信用卡' },
-      { label: '備註', value: '牛肉麵' },
+      { label: '交易型態', value: '支出 / 收入 / 轉帳 / 調整' },
+      { label: '填寫節奏', value: '單一表單完成' },
+      { label: '適用場景', value: '日常消費與臨時代墊' },
+      { label: '目的', value: '降低漏記與誤記' },
+    ],
+  },
+  {
+    key: 'ai-input',
+    title: 'AI 快速記帳',
+    description: '像輸入一句話一樣記帳，自動拆解成可入帳資料。',
+    previewTag: 'AI Parsing',
+    previewTitle: '自然語句可直接解析成交易',
+    previewDescription: '例如「午餐250信用卡牛肉麵」，可自動判斷金額、帳戶、分類與備註。',
+    pills: ['多語輸入', '分類判斷', '減少重複備註'],
+    rows: [
+      { label: '輸入內容', value: '午餐250信用卡牛肉麵' },
+      { label: '解析金額', value: 'NT$ 250' },
+      { label: '解析帳戶', value: '信用卡' },
+      { label: '解析分類', value: '餐飲支出' },
     ],
   },
   {
     key: 'ledgers',
-    title: '多帳本系統',
-    description: '家庭、個人、副業一鍵切換，資料與分析完全隔離。',
-    previewTag: 'Ledger Isolation',
-    previewTitle: '多身份資金流同步管理',
-    previewDescription: '每本帳有自己的收支、預算與報表，避免公私混帳。',
-    pills: ['家庭', '個人', '副業'],
+    title: '多帳本設計',
+    description: '生活、家庭、工作帳分開，資料不混雜。',
+    previewTag: 'Ledger Context',
+    previewTitle: '同一套功能，跟著帳本上下文一起切換',
+    previewDescription: '不只首頁，連分析、借貸、報銷與備份都會使用同一帳本脈絡。',
+    pills: ['個人', '家庭', '副業'],
     rows: [
-      { label: '家庭帳本', value: '本月結餘 +NT$ 8,420' },
-      { label: '個人帳本', value: '本月結餘 +NT$ 12,100' },
-      { label: '副業帳本', value: '本月結餘 +NT$ 6,980' },
-      { label: '切換速度', value: '< 1 秒' },
-    ],
-  },
-  {
-    key: 'budget',
-    title: '預算透視',
-    description: '不只看總額，深入分類層級，紅綠燈號一目了然。',
-    previewTag: 'Budget Insight',
-    previewTitle: '超支前先看見風險',
-    previewDescription: '分類預算即時比對，紅燈區塊優先顯示，快速調整消費策略。',
-    pills: ['分類預警', '月度趨勢', '剩餘預算'],
-    rows: [
-      { label: '餐飲預算', value: '90% 使用（黃燈）' },
-      { label: '交通預算', value: '62% 使用（綠燈）' },
-      { label: '娛樂預算', value: '112% 使用（紅燈）' },
-      { label: '本月總控', value: '可控狀態 81%' },
+      { label: '帳本切換', value: '個人 / 家庭 / 工作' },
+      { label: '資料範圍', value: '互不混用' },
+      { label: '報表分析', value: '各自獨立統計' },
+      { label: '適合對象', value: '多身分、多用途使用者' },
     ],
   },
   {
     key: 'search',
-    title: '強大搜尋',
-    description: '關鍵字 + 日期區間，像搜尋引擎一樣回查交易歷史。',
-    previewTag: 'Search Engine',
-    previewTitle: '查帳不再靠記憶',
-    previewDescription: '組合關鍵字、分類、日期區間，精準找回每一筆交易。',
-    pills: ['全文搜尋', '日期區間', '多條件篩選'],
+    title: '高效率搜尋',
+    description: '關鍵字搭配日期區間，快速回查任一筆交易。',
+    previewTag: 'Search & Audit',
+    previewTitle: '對帳、追蹤、回溯都更快',
+    previewDescription: '可搜尋分類、帳戶、備註、金額與日期文字，適合回查異常支出。',
+    pills: ['關鍵字', '日期區間', '多欄位命中'],
     rows: [
-      { label: '搜尋詞', value: '「聚餐」 + 去年第四季' },
-      { label: '命中筆數', value: '23 筆交易' },
-      { label: '最快回應', value: '0.15 秒' },
-      { label: '可匯出', value: 'CSV / Excel' },
+      { label: '查詢條件', value: '聚餐 + 2026/01/01 - 2026/01/31' },
+      { label: '可搜欄位', value: '分類 / 帳戶 / 備註 / 金額 / 日期' },
+      { label: '使用情境', value: '對帳與異常追蹤' },
+      { label: '結果整理', value: '可接續報表匯出' },
     ],
+  },
+  {
+    key: 'money-box',
+    title: '存錢罐',
+    description: '把先存起來的錢獨立管理，不混進日常可花餘額。',
+    previewTag: 'Savings Space',
+    previewTitle: '儲蓄有自己的空間，而不是塞進一般帳戶',
+    previewDescription: '可設定目標金額、追蹤進度，並決定是否納入資產統計。',
+    pills: ['目標進度', '可排除資產', '不限用途'],
+    rows: [
+      { label: '免費版', value: '1 個存錢罐' },
+      { label: '會員版', value: '不限數量' },
+      { label: '可執行', value: '存入 / 提取' },
+      { label: '預設行為', value: '不計入資產' },
+    ],
+  },
+]
+
+const insightItems = [
+  {
+    icon: '📅',
+    title: '按月份管理預算',
+    description: '每月預算獨立檢視，知道這個月真正該控制的消費重點。',
+  },
+  {
+    icon: '🧭',
+    title: '分類層級執行狀況',
+    description: '不只看總額，還能掌握哪些分類超支、哪些仍有空間。',
+  },
+  {
+    icon: '📈',
+    title: '日均規則更貼近日常',
+    description: '支援固定月額、平日 / 假日 / 自訂星期與指定日期的分類預算規則。',
+  },
+  {
+    icon: '🥧',
+    title: '收入 / 支出視角切換',
+    description: '分析頁可切換區間與收支視角，搭配圓餅圖、占比與筆數快速讀懂金流。',
   },
 ]
 
@@ -352,18 +468,26 @@ const advancedFlows = [
   {
     chip: 'Lending Flow',
     title: '借貸管理',
-    graphicTitle: '借出 -> 進行中 -> 設定還款 -> 結案',
+    graphicTitle: '借出 / 借入 -> 還款 -> 狀態更新 -> 結束或作廢',
     description:
-      '別把借貸藏在備註裡。每筆欠款都有獨立狀態與紀錄，清楚區分資產流動與實際支出。',
-    steps: ['建立借貸對象', '設定金額與期限', '分次還款追蹤', '結案自動對帳'],
+      '每筆借貸都能獨立追蹤借出、借入、還款與狀態，不再把欠款對象塞進備註裡硬記。',
+    steps: ['建立借貸項目', '設定金額與對象', '記錄還款', '追蹤進行中 / 已結束 / 作廢'],
   },
   {
     chip: 'Reimbursement Flow',
-    title: '報銷流程',
-    graphicTitle: '標記待報銷 -> 提交憑證 -> 報銷入帳 -> 自動沖銷',
+    title: '報銷與請款',
+    graphicTitle: '標記待報銷 -> 導入請款單 -> 完成請款 -> 自動同步狀態',
     description:
-      '公司代墊、家庭採購都能標記為待報銷，入帳後自動沖銷，避免代墊金額灌水個人資產。',
-    steps: ['交易標記待報銷', '追蹤待回款清單', '執行報銷入帳', '資產與支出同步修正'],
+      '未報銷與已報銷分開管理，請款單可手動新增項目，也可導入報銷並在完成後同步更新。',
+    steps: ['交易標記待報銷', '整理未報銷清單', '建立或導入請款單', '完成請款後同步結案'],
+  },
+  {
+    chip: 'Offset Flow',
+    title: '代收抵扣',
+    graphicTitle: '先收到款項 -> 標記為代收 -> 報銷入帳時抵扣 -> 不計入可支配資產',
+    description:
+      '代收金額不計入預算、不進分析，也不算入可支配餘額，避免把暫收款誤判成真正收入。',
+    steps: ['先收到但未核銷的款項', '標示為代收', '報銷入帳時自動抵扣', '帳戶額外顯示代收金額'],
   },
 ]
 
@@ -371,23 +495,34 @@ const trustItems = [
   {
     icon: '☁️',
     title: '雲端備份',
-    description: '支援 Google Drive(appDataFolder) 與 WebDAV，備份位置可控。',
+    description: '支援 WebDAV 與 Google Drive appDataFolder，備份位置可控。',
   },
   {
-    icon: '🔒',
-    title: '本地優先',
-    description: '基於 SQLite，離線也能極速記帳，不依賴持續網路連線。',
+    icon: '🔐',
+    title: 'Google 自動恢復登入',
+    description: '開啟 App 與回前景時可嘗試靜默恢復登入，優先沿用上次備份帳號。',
   },
   {
     icon: '🔄',
-    title: '無痛換機',
-    description: '完整匯出與還原流程，附一致性檢查，降低遺漏與毀損風險。',
+    title: '完整還原流程',
+    description: '還原前可清空資料再匯入，還原後提供一致性檢查與修復提示。',
   },
   {
-    icon: '📂',
-    title: 'CSV 匯出',
-    description: '資料可帶去 Excel 深度分析，不被單一平台綁架。',
+    icon: '📄',
+    title: 'CSV / PDF 匯出',
+    description: '除了 CSV，也能直接輸出 PDF 報表，方便對帳、存檔與分享。',
   },
+]
+
+const differentiationItems = ['多帳本', '預算', '借貸', '報銷', '請款單', '存錢罐', 'AI 輸入', '備份還原']
+
+const audienceItems = [
+  '想穩定維持每月記帳習慣的人',
+  '想把家庭、個人與工作金流分開管理的人',
+  '常有代墊、報銷、請款情境的人',
+  '有借貸往來、需要追蹤欠款對象的人',
+  '想建立儲蓄目標、控制可支配資產的人',
+  '需要定期對帳、匯出與備份的人',
 ]
 
 const activeFeatureKey = ref(coreFeatures[0].key)
@@ -577,6 +712,8 @@ onBeforeUnmount(() => {
 .nav-links {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.9rem;
 }
 
@@ -585,11 +722,21 @@ onBeforeUnmount(() => {
   text-decoration: none;
   font-size: 0.92rem;
   font-weight: 600;
+  white-space: nowrap;
   transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
   color: var(--text-primary);
+}
+
+.nav-links a:not(.pill-link) {
+  padding: 0.38rem 0.7rem;
+  border-radius: 999px;
+}
+
+.nav-links a:not(.pill-link):hover {
+  background: color-mix(in srgb, var(--bg-card-soft) 78%, transparent);
 }
 
 .nav-links .pill-link {
@@ -601,75 +748,38 @@ onBeforeUnmount(() => {
 
 .theme-toggle {
   border: 1px solid var(--border-color);
-  background: var(--bg-card-soft);
+  background: color-mix(in srgb, var(--bg-card-soft) 90%, transparent);
   color: var(--text-primary);
   border-radius: 999px;
-  padding: 0.28rem 0.5rem;
+  min-height: 42px;
+  padding: 0.45rem 0.8rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  justify-content: center;
+  gap: 0.5rem;
   cursor: pointer;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.2s ease;
 }
 
-.toggle-track {
-  width: 56px;
-  height: 30px;
+.theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.theme-toggle-icon {
+  width: 1.6rem;
+  height: 1.6rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.14), rgba(255, 255, 255, 0.04));
-  border: 1px solid var(--border-color);
-  padding: 3px;
-  position: relative;
-}
-
-.toggle-thumb {
-  width: 22px;
-  height: 22px;
-  border-radius: 50% 48% 52% 50%;
-  background: var(--accent-color);
-  position: relative;
-  transform: translateX(0) rotate(-6deg);
-  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), border-radius 0.34s ease;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.24);
-}
-
-.landing[data-theme='dark'] .toggle-thumb {
-  transform: translateX(26px) rotate(8deg);
-  border-radius: 45% 55% 50% 50%;
-}
-
-.sun-icon,
-.moon-icon {
-  position: absolute;
-  inset: 0;
   display: grid;
   place-items: center;
-  font-size: 0.72rem;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.sun-icon {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.moon-icon {
-  opacity: 0;
-  transform: scale(0.62);
-}
-
-.landing[data-theme='dark'] .sun-icon {
-  opacity: 0;
-  transform: scale(0.62);
-}
-
-.landing[data-theme='dark'] .moon-icon {
-  opacity: 1;
-  transform: scale(1);
+  background: color-mix(in srgb, var(--accent-soft) 70%, var(--bg-card));
+  color: var(--accent-color);
+  font-size: 0.92rem;
+  line-height: 1;
 }
 
 .toggle-text {
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--text-secondary);
 }
@@ -778,6 +888,39 @@ onBeforeUnmount(() => {
   font-size: 0.78rem;
   color: var(--text-secondary);
   background: color-mix(in srgb, var(--bg-card-soft) 76%, transparent);
+}
+
+.hero-metrics {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.72rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metric-card {
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 0.85rem;
+  background: color-mix(in srgb, var(--bg-card-soft) 82%, transparent);
+  display: grid;
+  gap: 0.28rem;
+}
+
+.metric-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+}
+
+.metric-card strong {
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.metric-card span {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  line-height: 1.55;
 }
 
 .phone-shell {
@@ -1167,6 +1310,10 @@ onBeforeUnmount(() => {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .trust-card {
   border: 1px solid var(--border-color);
   border-radius: 16px;
@@ -1187,6 +1334,32 @@ onBeforeUnmount(() => {
 .trust-card p {
   color: var(--text-secondary);
   line-height: 1.62;
+  font-size: 0.9rem;
+}
+
+.bottom-layout {
+  align-items: stretch;
+}
+
+.audience-card {
+  min-height: 100%;
+}
+
+.audience-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.audience-list li {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.62rem 0.72rem;
+  background: color-mix(in srgb, var(--bg-card-soft) 78%, transparent);
+  color: var(--text-secondary);
+  line-height: 1.55;
   font-size: 0.9rem;
 }
 
@@ -1333,6 +1506,11 @@ onBeforeUnmount(() => {
     grid-template-columns: 1fr;
   }
 
+  .hero-metrics,
+  .insight-grid {
+    grid-template-columns: 1fr;
+  }
+
   .flow-row.reverse .flow-graphic,
   .flow-row.reverse .flow-copy {
     order: initial;
@@ -1347,18 +1525,24 @@ onBeforeUnmount(() => {
   .topbar {
     flex-wrap: wrap;
     border-radius: 18px;
+    justify-content: space-between;
   }
 
   .nav-links {
     width: 100%;
     order: 3;
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding: 0.2rem 0.1rem 0;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.25rem 0 0;
   }
 
-  .toggle-text {
-    display: none;
+  .nav-links a {
+    font-size: 0.84rem;
+  }
+
+  .nav-links a:not(.pill-link),
+  .nav-links .pill-link {
+    padding: 0.42rem 0.68rem;
   }
 }
 
@@ -1377,9 +1561,21 @@ onBeforeUnmount(() => {
     grid-template-columns: 1fr;
   }
 
+  .hero-metrics {
+    grid-template-columns: 1fr;
+  }
+
   .hero-actions .btn,
   .download-btn {
     width: 100%;
+  }
+
+  .theme-toggle {
+    width: 100%;
+  }
+
+  .toggle-text {
+    display: inline;
   }
 
   .download-fab {
@@ -1395,9 +1591,7 @@ onBeforeUnmount(() => {
   .feature-tab,
   .download-btn,
   .download-fab,
-  .toggle-thumb,
-  .sun-icon,
-  .moon-icon {
+  .theme-toggle {
     animation: none !important;
     transition: none !important;
     transform: none !important;
