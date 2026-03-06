@@ -12,7 +12,7 @@
           <a href="#budget">預算分析</a>
           <a href="#flows">金流流程</a>
           <a href="#security">備份保障</a>
-          <a href="#download" class="pill-link">立即下載</a>
+          <a :href="androidUrl" class="pill-link" target="_blank" rel="noreferrer">立即下載</a>
         </nav>
 
         <button type="button" class="theme-toggle" :aria-pressed="theme === 'light'" @click="toggleTheme">
@@ -287,7 +287,7 @@
       </main>
     </div>
 
-    <a href="#download" class="download-fab">立即下載</a>
+    <a :href="androidUrl" class="download-fab" target="_blank" rel="noreferrer">立即下載</a>
   </div>
 </template>
 
@@ -295,13 +295,17 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import appLogo from '@/assets/icon/icon.png'
 
-const androidUrl =
-  import.meta.env.VITE_ANDROID_URL ||
-  import.meta.env.VITE_APK_URL ||
-  'https://play.google.com/store/apps/details?id=com.strawcoding.strawmoneybook'
-const iosUrl = import.meta.env.VITE_IOS_URL || '#'
-const hasAndroidDownload = androidUrl !== '#'
-const hasIosDownload = iosUrl !== '#'
+const isValidDownloadUrl = (value) => typeof value === 'string' && value.trim() !== '' && value.trim() !== '#'
+const pickFirstValidUrl = (...candidates) => candidates.find(isValidDownloadUrl) || '#'
+
+const androidUrl = pickFirstValidUrl(
+  import.meta.env.VITE_ANDROID_URL,
+  import.meta.env.VITE_APK_URL,
+  'https://play.google.com/store/apps/details?id=com.strawcoding.strawmoneybook',
+)
+const iosUrl = pickFirstValidUrl(import.meta.env.VITE_IOS_URL)
+const hasAndroidDownload = isValidDownloadUrl(androidUrl)
+const hasIosDownload = isValidDownloadUrl(iosUrl)
 
 const initialTheme = () => {
   if (typeof window === 'undefined') {
