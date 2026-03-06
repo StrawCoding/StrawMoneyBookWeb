@@ -12,7 +12,7 @@
           <a href="#budget">預算分析</a>
           <a href="#flows">金流流程</a>
           <a href="#security">備份保障</a>
-          <a href="#download" class="pill-link">立即下載</a>
+          <a href="https://play.google.com/store/apps/details?id=com.strawcoding.strawmoneybook" class="pill-link">立即下載</a>
         </nav>
 
         <button type="button" class="theme-toggle" :aria-pressed="theme === 'light'" @click="toggleTheme">
@@ -45,7 +45,7 @@
               <a
                 class="btn btn-primary"
                 :class="{ disabled: !hasAndroidDownload }"
-                :href="hasAndroidDownload ? androidUrl : '#download'"
+                :href="hasAndroidDownload ? androidUrl : 'https://play.google.com/store/apps/details?id=com.strawcoding.strawmoneybook'"
                 target="_blank"
                 rel="noreferrer"
               >
