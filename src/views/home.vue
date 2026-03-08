@@ -9,6 +9,7 @@
 
         <nav class="nav-links" aria-label="Primary">
           <a href="#features">功能亮點</a>
+          <a href="#shared-ledger">共同帳本</a>
           <a href="#budget">預算分析</a>
           <a href="#flows">金流流程</a>
           <a href="#security">備份保障</a>
@@ -27,7 +28,7 @@
             <p class="kicker">Cashflow, Not Just Logging</p>
             <h1 class="hero-title">把記一筆帳，升級成管理一整段金流流程。</h1>
             <p class="hero-subtitle">
-              StrawMoneyBook 把日常收支、預算控管、借貸追蹤、報銷請款、存錢管理與備份還原整合在同一個 App，
+              StrawMoneyBook 把日常收支、共同帳本、預算控管、借貸追蹤、報銷請款、存錢管理與備份還原整合在同一個 App，
               讓你不只知道花了多少，也知道每一筆錢正經過什麼流程。
             </p>
 
@@ -55,6 +56,7 @@
 
             <ul class="hero-bullets">
               <li>多帳本分流</li>
+              <li>共同帳本協作</li>
               <li>AI 自然語言記帳</li>
               <li>借貸 / 報銷 / 請款</li>
               <li>存錢罐與備份還原</li>
@@ -173,6 +175,53 @@
           </div>
         </section>
 
+        <section id="shared-ledger" class="panel reveal" :ref="registerReveal">
+          <p class="section-tag">Shared Ledger</p>
+          <h2 class="section-title">共同帳本，讓同一段生活用同一本帳來協作</h2>
+          <p class="section-subtitle">
+            不管是伴侶、家庭、室友，還是一起跑專案的夥伴，都能用同一本帳同步記錄與追蹤，
+            少掉來回截圖、口頭對帳和月底補資料的成本。
+          </p>
+          <div class="feature-layout bottom-layout">
+            <article class="feature-preview audience-card">
+              <div class="feature-preview-screen">
+                <p class="preview-kicker">Shared Workflow</p>
+                <h3>邀請成員加入後，支出、收入與責任歸屬都能一起看</h3>
+                <p class="preview-copy">
+                  共同帳本沿用 StrawMoneyBook 原本的帳本脈絡，加入成員後可直接共用記帳、查詢、分析與追蹤流程。
+                </p>
+                <div class="preview-pill-list">
+                  <span v-for="item in sharedLedgerHighlights" :key="item">{{ item }}</span>
+                </div>
+                <ul class="preview-rows">
+                  <li v-for="row in sharedLedgerRows" :key="row.label">
+                    <span>{{ row.label }}</span>
+                    <strong>{{ row.value }}</strong>
+                  </li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="feature-preview audience-card">
+              <div class="feature-preview-screen">
+                <p class="preview-kicker">Why It Helps</p>
+                <h3>不是單純共用資料，而是把協作流程也一起收進帳本裡</h3>
+                <ul class="audience-list">
+                  <li v-for="item in sharedLedgerChecklist" :key="item">{{ item }}</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+
+          <div class="pain-grid shared-ledger-grid">
+            <article v-for="item in sharedLedgerBenefits" :key="item.title" class="pain-card">
+              <h3>{{ item.title }}</h3>
+              <p class="pain-question">{{ item.highlight }}</p>
+              <p>{{ item.description }}</p>
+            </article>
+          </div>
+        </section>
+
         <section id="flows" class="panel advanced reveal" :ref="registerReveal">
           <p class="section-tag">Real-World Flow</p>
           <h2 class="section-title">借貸、報銷、請款，不再靠備註硬撐</h2>
@@ -253,7 +302,7 @@
         <section id="download" class="panel footer-panel reveal" :ref="registerReveal">
           <h2 class="section-title">從今天開始，把記帳變成真正可追蹤的金流管理</h2>
           <p class="section-subtitle">
-            從日常收支，到暫墊款項、借貸往來、儲蓄目標與備份保障，讓每一筆錢都更清楚、更可控。
+            從日常收支、共同帳本，到暫墊款項、借貸往來、儲蓄目標與備份保障，讓每一筆錢都更清楚、更可控。
           </p>
           <div class="footer-actions">
             <a
@@ -347,7 +396,7 @@ const heroEntries = [
 ]
 
 const heroMetrics = [
-  { label: '管理範圍', value: '8+ 金流場景', detail: '記帳、預算、借貸、報銷、請款、存錢與備份整合' },
+  { label: '管理範圍', value: '9+ 金流場景', detail: '記帳、共同帳本、預算、借貸、報銷、請款、存錢與備份整合' },
   { label: '輸入速度', value: '一句話入帳', detail: 'AI 解析金額、帳戶、分類與備註' },
   { label: '資料延續', value: '備份可還原', detail: '支援匯出、修復、WebDAV 與 Google Drive' },
 ]
@@ -361,7 +410,7 @@ const valueCards = [
   {
     title: '從單一帳本變成分流管理',
     highlight: '個人、家庭、工作、副業可以各自獨立運作。',
-    description: '切換帳本後，首頁、分析、借貸、報銷與備份會同步使用同一帳本脈絡。',
+    description: '除了個人帳本，也能建立共同帳本，讓成員用同一套分析、查詢與追蹤脈絡協作。',
   },
   {
     title: '從短期使用變成長期可持續',
@@ -414,6 +463,21 @@ const coreFeatures = [
       { label: '資料範圍', value: '互不混用' },
       { label: '報表分析', value: '各自獨立統計' },
       { label: '適合對象', value: '多身分、多用途使用者' },
+    ],
+  },
+  {
+    key: 'shared-ledger',
+    title: '共同帳本',
+    description: '和伴侶、家人、室友或夥伴一起記，同步掌握同一本帳。',
+    previewTag: 'Shared Ledger',
+    previewTitle: '共同生活或共同專案，不用再靠訊息對帳',
+    previewDescription: '共用同一本帳後，每個人都能即時補上支出與收入，月底不必再回頭拼記憶。',
+    pills: ['伴侶', '家庭', '室友', '專案夥伴'],
+    rows: [
+      { label: '協作方式', value: '邀請成員加入帳本' },
+      { label: '可見範圍', value: '同帳本內同步更新' },
+      { label: '搭配功能', value: '搜尋 / 分析 / 預算 / 流程追蹤' },
+      { label: '適用場景', value: '家庭共用與多人分帳' },
     ],
   },
   {
@@ -471,6 +535,40 @@ const insightItems = [
   },
 ]
 
+const sharedLedgerHighlights = ['成員邀請', '同步記錄', '共同檢視', '分工更清楚']
+
+const sharedLedgerRows = [
+  { label: '建立方式', value: '新增共同帳本後邀請成員' },
+  { label: '同步內容', value: '交易、分類脈絡與查詢結果' },
+  { label: '適用對象', value: '伴侶 / 家庭 / 室友 / 專案夥伴' },
+  { label: '協作價值', value: '減少重複回報與月底補帳' },
+]
+
+const sharedLedgerChecklist = [
+  '一起記錄共同支出，不用再把收據和轉帳紀錄散落在聊天室裡。',
+  '同一本帳直接回看誰新增了什麼、什麼時候入帳，追蹤脈絡更完整。',
+  '家庭採買、旅遊分攤、室友公共費用和共同專案支出都能用同一套邏輯管理。',
+  '共同帳本和個人帳本分開並存，不會把自己的私人開銷混進共享資料。',
+]
+
+const sharedLedgerBenefits = [
+  {
+    title: '共同生活更好對帳',
+    highlight: '伴侶、家庭與室友不需要再等月底整理。',
+    description: '誰先付款、誰補上紀錄、哪些費用屬於共同開銷，都能在同一本帳裡即時看見。',
+  },
+  {
+    title: '共享資料但不混亂',
+    highlight: '共同帳本與個人帳本並存，協作和隱私可以分開。',
+    description: '私人收支留在自己的帳本，共同費用進共同帳本，分析與搜尋結果更乾淨。',
+  },
+  {
+    title: '流程功能一起繼承',
+    highlight: '不是只有共用記帳，連後續管理也能一起接上。',
+    description: '共同帳本同樣能延伸到預算、搜尋、借貸與報銷等流程，不必為多人協作切到別的工具。',
+  },
+]
+
 const advancedFlows = [
   {
     chip: 'Lending Flow',
@@ -521,11 +619,12 @@ const trustItems = [
   },
 ]
 
-const differentiationItems = ['多帳本', '預算', '借貸', '報銷', '請款單', '存錢罐', 'AI 輸入', '備份還原']
+const differentiationItems = ['多帳本', '共同帳本', '預算', '借貸', '報銷', '請款單', '存錢罐', 'AI 輸入', '備份還原']
 
 const audienceItems = [
   '想穩定維持每月記帳習慣的人',
   '想把家庭、個人與工作金流分開管理的人',
+  '需要和伴侶、家人或室友共用一本帳的人',
   '常有代墊、報銷、請款情境的人',
   '有借貸往來、需要追蹤欠款對象的人',
   '想建立儲蓄目標、控制可支配資產的人',
@@ -1057,6 +1156,10 @@ onBeforeUnmount(() => {
   display: grid;
   gap: 0.72rem;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.shared-ledger-grid {
+  margin-top: 1rem;
 }
 
 .pain-card {
