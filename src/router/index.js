@@ -3,6 +3,7 @@ import HomeView from '../views/home.vue'
 import TermsView from '../views/terms.vue'
 import PrivacyView from '../views/privacy.vue'
 import PreviewView from '../views/preview.vue'
+import SharedLedgerInviteView from '../views/sharedLedgerInvite.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,12 @@ const router = createRouter({
       path: '/preview',
       name: 'preview',
       component: PreviewView,
+    },
+    {
+      path: '/open/shared-ledger',
+      name: 'shared-ledger-invite',
+      alias: ['/shared-ledger/join'],
+      component: SharedLedgerInviteView,
     },
     {
       path: '/:pathMatch(.*)*',
