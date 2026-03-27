@@ -58,6 +58,7 @@
               <li>多帳本分流</li>
               <li>共同帳本協作</li>
               <li>AI 自然語言記帳</li>
+              <li>發票載具整合</li>
               <li>借貸 / 報銷 / 請款</li>
               <li>存錢罐與備份還原</li>
             </ul>
@@ -390,13 +391,14 @@ const toggleTheme = () => {
 
 const heroEntries = [
   { type: 'expense', title: '午餐 250', meta: '信用卡 · AI 解析完成', amount: '-NT$ 250' },
+  { type: 'expense', title: '超商咖啡 65', meta: '手機條碼載具同步', amount: '-NT$ 65' },
   { type: 'expense', title: '專案代墊材料', meta: '標記待報銷', amount: '-NT$ 1,800' },
   { type: 'income', title: '報銷回款', meta: '代收抵扣後入帳', amount: '+NT$ 1,800' },
   { type: 'income', title: '副業請款完成', meta: '請款單自動結案', amount: '+NT$ 12,000' },
 ]
 
 const heroMetrics = [
-  { label: '管理範圍', value: '9+ 金流場景', detail: '記帳、共同帳本、預算、借貸、報銷、請款、存錢與備份整合' },
+  { label: '管理範圍', value: '10+ 金流場景', detail: '記帳、載具、共同帳本、預算、借貸、報銷、請款、存錢與備份整合' },
   { label: '輸入速度', value: '一句話入帳', detail: 'AI 解析金額、帳戶、分類與備註' },
   { label: '資料延續', value: '備份可還原', detail: '支援匯出、修復、WebDAV 與 Google Drive' },
 ]
@@ -448,6 +450,21 @@ const coreFeatures = [
       { label: '解析金額', value: 'NT$ 250' },
       { label: '解析帳戶', value: '信用卡' },
       { label: '解析分類', value: '餐飲支出' },
+    ],
+  },
+  {
+    key: 'invoice-carrier',
+    title: '發票載具',
+    description: '把手機條碼載具收進 App，讓消費與發票紀錄更容易接回帳務脈絡。',
+    previewTag: 'Invoice Carrier',
+    previewTitle: '載具不是獨立存在，而是回到記帳流程裡',
+    previewDescription: '新增手機條碼或其他發票載具後，對帳時更容易回看消費來源，減少手動補資訊的成本。',
+    pills: ['手機條碼', '消費回查', '發票脈絡'],
+    rows: [
+      { label: '支援用途', value: '新增與管理常用載具' },
+      { label: '主要價值', value: '對帳與消費回查更完整' },
+      { label: '搭配功能', value: '快速記帳 / 搜尋 / 分析' },
+      { label: '適用情境', value: '日常發票整理與個人對帳' },
     ],
   },
   {
@@ -619,13 +636,14 @@ const trustItems = [
   },
 ]
 
-const differentiationItems = ['多帳本', '共同帳本', '預算', '借貸', '報銷', '請款單', '存錢罐', 'AI 輸入', '備份還原']
+const differentiationItems = ['多帳本', '共同帳本', '預算', '借貸', '報銷', '請款單', '發票載具', '存錢罐', 'AI 輸入', '備份還原']
 
 const audienceItems = [
   '想穩定維持每月記帳習慣的人',
   '想把家庭、個人與工作金流分開管理的人',
   '需要和伴侶、家人或室友共用一本帳的人',
   '常有代墊、報銷、請款情境的人',
+  '想把發票載具和記帳流程整合的人',
   '有借貸往來、需要追蹤欠款對象的人',
   '想建立儲蓄目標、控制可支配資產的人',
   '需要定期對帳、匯出與備份的人',
