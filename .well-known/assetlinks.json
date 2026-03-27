@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.strawcoding.strawmoneybook",
+      "sha256_cert_fingerprints": [
+        "C3:EF:02:C0:FF:2A:68:E0:9D:A0:E4:A6:CB:58:62:A5:75:60:0F:9C:80:C4:55:29:DA:37:B4:89:EE:B2:97:3A"
+      ]
+    }
+  }
+]
