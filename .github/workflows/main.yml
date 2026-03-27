@@ -19,6 +19,10 @@ jobs:
         if [ -f CNAME ]; then
           cp CNAME dist/CNAME
         fi
+        if [ -d .well-known ]; then
+          mkdir -p dist/.well-known
+          cp -R .well-known/. dist/.well-known/
+        fi
     - name: 發布分支 Web-Page
       uses: JamesIves/github-pages-deploy-action@v4
       with: 
