@@ -28,7 +28,7 @@
             <p class="kicker">Cashflow, Not Just Logging</p>
             <h1 class="hero-title">把記一筆帳，升級成管理一整段金流流程。</h1>
             <p class="hero-subtitle">
-              StrawMoneyBook 把日常收支、共同帳本、預算控管、借貸追蹤、報銷請款、存錢管理與備份還原整合在同一個 App，
+              StrawMoneyBook 是一款稻草 AI 記帳 App，把日常收支、共同帳本、預算控管、借貸追蹤、報銷請款、存錢管理與備份還原整合在同一個 App，
               讓你不只知道花了多少，也知道每一筆錢正經過什麼流程。
             </p>
 
@@ -439,10 +439,10 @@ const coreFeatures = [
   },
   {
     key: 'ai-input',
-    title: 'AI 快速記帳',
-    description: '像輸入一句話一樣記帳，自動拆解成可入帳資料。',
+    title: '稻草 AI 記帳',
+    description: '像輸入一句話一樣記帳，稻草 AI 會自動拆解成可入帳資料。',
     previewTag: 'AI Parsing',
-    previewTitle: '自然語句可直接解析成交易',
+    previewTitle: '稻草 AI 記帳可把自然語句直接解析成交易',
     previewDescription: '例如「午餐250信用卡牛肉麵」，可自動判斷金額、帳戶、分類與備註。',
     pills: ['多語輸入', '分類判斷', '減少重複備註'],
     rows: [
