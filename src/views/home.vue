@@ -1,28 +1,46 @@
 <template>
+  <a class="skip-link" href="#main-content">跳至主要內容</a>
   <div class="landing" :data-theme="theme" :class="{ 'reveal-enabled': hasRevealObserver }">
     <div class="landing-shell">
-      <header class="topbar">
+      <header class="topbar" :class="{ 'is-scrolled': isScrolled }">
         <a class="brand" href="#hero">
           <img :src="appLogo" alt="StrawMoneyBook Logo" class="brand-logo" />
           <span class="brand-name">StrawMoneyBook</span>
         </a>
 
-        <nav class="nav-links" aria-label="Primary">
-          <a href="#features">功能亮點</a>
-          <a href="#shared-ledger">共同帳本</a>
-          <a href="#budget">預算分析</a>
-          <a href="#flows">金流流程</a>
-          <a href="#security">備份保障</a>
-          <a :href="androidUrl" class="pill-link" target="_blank" rel="noreferrer">立即下載</a>
+        <nav class="nav-links" :class="{ 'is-open': isMenuOpen }" aria-label="Primary">
+          <a href="#features" :class="{ 'is-active': activeSection === 'features' }" @click="closeMenu">功能亮點</a>
+          <a href="#shared-ledger" :class="{ 'is-active': activeSection === 'shared-ledger' }" @click="closeMenu">共同帳本</a>
+          <a href="#budget" :class="{ 'is-active': activeSection === 'budget' }" @click="closeMenu">預算分析</a>
+          <a href="#flows" :class="{ 'is-active': activeSection === 'flows' }" @click="closeMenu">金流流程</a>
+          <a href="#security" :class="{ 'is-active': activeSection === 'security' }" @click="closeMenu">備份保障</a>
+          <a :href="androidUrl" class="pill-link" target="_blank" rel="noreferrer" @click="closeMenu">立即下載</a>
         </nav>
 
-        <button type="button" class="theme-toggle" :aria-pressed="theme === 'light'" @click="toggleTheme">
-          <span class="theme-toggle-icon" aria-hidden="true">{{ theme === 'dark' ? '☾' : '☀' }}</span>
-          <span class="toggle-text">{{ theme === 'dark' ? '深色模式' : '淺色模式' }}</span>
-        </button>
+        <div class="topbar-actions">
+          <button type="button" class="theme-toggle" :aria-pressed="theme === 'light'" @click="toggleTheme">
+            <span class="theme-toggle-icon" aria-hidden="true">{{ theme === 'dark' ? '☾' : '☀' }}</span>
+            <span class="toggle-text">{{ theme === 'dark' ? '深色模式' : '淺色模式' }}</span>
+          </button>
+          <button
+            type="button"
+            class="hamburger"
+            :aria-expanded="isMenuOpen"
+            :aria-label="isMenuOpen ? '關閉選單' : '開啟選單'"
+            @click="toggleMenu"
+          >
+            <span class="hamburger-line" :class="{ 'line-1-open': isMenuOpen }"></span>
+            <span class="hamburger-line" :class="{ 'line-2-open': isMenuOpen }"></span>
+            <span class="hamburger-line" :class="{ 'line-3-open': isMenuOpen }"></span>
+          </button>
+        </div>
       </header>
 
-      <main class="content">
+      <Transition name="backdrop-fade">
+        <div v-if="isMenuOpen" class="nav-backdrop" @click="closeMenu" aria-hidden="true"></div>
+      </Transition>
+
+      <main class="content" id="main-content">
         <section id="hero" class="panel hero reveal" :ref="registerReveal">
           <div>
             <p class="kicker">Cashflow, Not Just Logging</p>
@@ -73,6 +91,8 @@
           </div>
 
           <aside class="phone-shell">
+            <div class="phone-glow-ring" aria-hidden="true"></div>
+            <div class="phone-dot-grid" aria-hidden="true"></div>
             <div class="phone-head">
               <span>Quick Add</span>
               <strong>Today</strong>
@@ -90,7 +110,7 @@
                 :class="item.type"
                 :style="{ '--delay': `${0.15 + index * 0.12}s` }"
               >
-                <div>
+                <div class="entry-info">
                   <p>{{ item.title }}</p>
                   <small>{{ item.meta }}</small>
                 </div>
@@ -358,35 +378,36 @@ const hasAndroidDownload = isValidDownloadUrl(androidUrl)
 const hasIosDownload = isValidDownloadUrl(iosUrl)
 
 const initialTheme = () => {
-  if (typeof window === 'undefined') {
-    return 'dark'
-  }
-
+  if (typeof window === 'undefined') return 'dark'
   const storedTheme = window.localStorage.getItem('smb-web-theme')
-  if (storedTheme === 'light' || storedTheme === 'dark') {
-    return storedTheme
-  }
-
+  if (storedTheme === 'light' || storedTheme === 'dark') return storedTheme
   return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
 }
 
 const theme = ref(initialTheme())
+const isScrolled = ref(false)
+const isMenuOpen = ref(false)
+const activeSection = ref('')
 
 watch(
   theme,
   (value) => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem('smb-web-theme', value)
-    }
-    if (typeof document !== 'undefined') {
-      document.documentElement.style.colorScheme = value
-    }
+    if (typeof window !== 'undefined') window.localStorage.setItem('smb-web-theme', value)
+    if (typeof document !== 'undefined') document.documentElement.style.colorScheme = value
   },
   { immediate: true },
 )
 
 const toggleTheme = () => {
   theme.value = theme.value === 'dark' ? 'light' : 'dark'
+}
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
+}
+
+const closeMenu = () => {
+  isMenuOpen.value = false
 }
 
 const heroEntries = [
@@ -663,10 +684,22 @@ const registerReveal = (el) => {
 }
 
 let sectionObserver
+let navObserver
+let scrollHandler
 let anchorLinkHandlers = []
+
 onMounted(() => {
+  if (typeof window !== 'undefined') {
+    scrollHandler = () => {
+      isScrolled.value = window.scrollY > 20
+    }
+    window.addEventListener('scroll', scrollHandler, { passive: true })
+    scrollHandler()
+  }
+
   if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
     hasRevealObserver.value = true
+
     sectionObserver = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -682,41 +715,48 @@ onMounted(() => {
     for (const node of revealNodes.value) {
       sectionObserver.observe(node)
     }
+
+    navObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            activeSection.value = entry.target.id
+          }
+        }
+      },
+      { threshold: 0.25, rootMargin: '-10% 0px -55% 0px' },
+    )
+
+    for (const id of ['hero', 'features', 'shared-ledger', 'budget', 'flows', 'security', 'download']) {
+      const el = document.getElementById(id)
+      if (el) navObserver.observe(el)
+    }
   }
 
   const anchorLinks = Array.from(document.querySelectorAll('a[href^="#"]'))
   anchorLinkHandlers = anchorLinks.map((link) => {
     const handler = (event) => {
       const href = link.getAttribute('href')
-      if (!href || href === '#') {
-        return
-      }
-
+      if (!href || href === '#') return
       const target = document.querySelector(href)
-      if (!target) {
-        return
-      }
-
+      if (!target) return
       event.preventDefault()
       const targetTop = target.getBoundingClientRect().top + window.scrollY
-      window.scrollTo({
-        top: Math.max(0, targetTop - 88),
-        behavior: 'smooth',
-      })
+      window.scrollTo({ top: Math.max(0, targetTop - 88), behavior: 'smooth' })
       target.classList.add('is-visible')
       history.replaceState(null, '', href)
     }
-
     link.addEventListener('click', handler)
     return { link, handler }
   })
 })
 
 onBeforeUnmount(() => {
-  if (sectionObserver) {
-    sectionObserver.disconnect()
+  if (sectionObserver) sectionObserver.disconnect()
+  if (navObserver) navObserver.disconnect()
+  if (scrollHandler && typeof window !== 'undefined') {
+    window.removeEventListener('scroll', scrollHandler)
   }
-
   for (const item of anchorLinkHandlers) {
     item.link.removeEventListener('click', item.handler)
   }
@@ -725,6 +765,36 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* ─── Skip link ─── */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  overflow: visible;
+  padding: 0.65rem 1.4rem;
+  background: var(--accent-color, #f2c94c);
+  color: #1f1600;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(242, 201, 76, 0.4);
+}
+
+/* ─── Theme tokens ─── */
 .landing {
   --bg-primary: #000000;
   --bg-secondary: rgba(30, 30, 30, 0.92);
@@ -738,13 +808,14 @@ onBeforeUnmount(() => {
   --border-color: #333333;
   --success-color: #27ae60;
   --danger-color: #cf6679;
-  --surface-glass: rgba(21, 21, 21, 0.84);
+  --surface-glass: rgba(21, 21, 21, 0.88);
   --shadow-soft: 0 24px 64px rgba(0, 0, 0, 0.34);
   min-height: 100vh;
   position: relative;
   color: var(--text-primary);
   background: var(--bg-primary);
-  overflow: hidden;
+  /* overflow: clip allows pseudo-element clipping without breaking sticky */
+  overflow: clip;
   transition: background 0.35s ease, color 0.35s ease;
 }
 
@@ -786,10 +857,11 @@ onBeforeUnmount(() => {
   --border-color: #e0e0e0;
   --success-color: #219653;
   --danger-color: #eb5757;
-  --surface-glass: rgba(255, 255, 255, 0.85);
+  --surface-glass: rgba(255, 255, 255, 0.9);
   --shadow-soft: 0 24px 58px rgba(24, 39, 64, 0.12);
 }
 
+/* ─── Shell ─── */
 .landing-shell {
   width: min(1140px, calc(100% - 2.6rem));
   margin: 0 auto;
@@ -798,6 +870,7 @@ onBeforeUnmount(() => {
   z-index: 1;
 }
 
+/* ─── Topbar ─── */
 .topbar {
   display: flex;
   align-items: center;
@@ -808,16 +881,29 @@ onBeforeUnmount(() => {
   border: 1px solid var(--border-color);
   background: var(--surface-glass);
   backdrop-filter: blur(12px);
-  position: relative;
-  z-index: 18;
+  -webkit-backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0.8rem;
+  z-index: 100;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.topbar.is-scrolled {
+  background: color-mix(in srgb, var(--surface-glass) 98%, transparent);
+  border-color: color-mix(in srgb, var(--accent-color) 28%, var(--border-color));
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.22),
+    0 0 0 1px color-mix(in srgb, var(--accent-color) 10%, transparent);
+}
+
+/* ─── Brand ─── */
 .brand {
   display: inline-flex;
   align-items: center;
   gap: 0.72rem;
   text-decoration: none;
   color: inherit;
+  flex-shrink: 0;
 }
 
 .brand-logo {
@@ -833,6 +919,7 @@ onBeforeUnmount(() => {
   letter-spacing: 0.02em;
 }
 
+/* ─── Nav links ─── */
 .nav-links {
   display: inline-flex;
   align-items: center;
@@ -847,7 +934,7 @@ onBeforeUnmount(() => {
   font-size: 0.92rem;
   font-weight: 600;
   white-space: nowrap;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .nav-links a:hover {
@@ -863,11 +950,31 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, var(--bg-card-soft) 78%, transparent);
 }
 
+.nav-links a.is-active:not(.pill-link) {
+  color: var(--accent-color);
+  background: color-mix(in srgb, var(--accent-soft) 85%, transparent);
+}
+
 .nav-links .pill-link {
   border: 1px solid var(--accent-color);
   border-radius: 999px;
   padding: 0.45rem 0.9rem;
   color: var(--accent-color);
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-links .pill-link:hover {
+  background: var(--accent-color);
+  color: #1f1600;
+  box-shadow: 0 4px 16px rgba(242, 201, 76, 0.3);
+}
+
+/* ─── Topbar right actions ─── */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .theme-toggle {
@@ -888,6 +995,7 @@ onBeforeUnmount(() => {
 
 .theme-toggle:hover {
   transform: translateY(-1px);
+  border-color: var(--accent-color);
 }
 
 .theme-toggle-icon {
@@ -908,18 +1016,86 @@ onBeforeUnmount(() => {
   color: var(--text-secondary);
 }
 
+/* ─── Hamburger ─── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  background: color-mix(in srgb, var(--bg-card-soft) 90%, transparent);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.hamburger:hover {
+  border-color: var(--accent-color);
+  background: var(--accent-soft);
+}
+
+.hamburger-line {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.line-1-open {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.line-2-open {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.line-3-open {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ─── Nav backdrop (mobile) ─── */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 90;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.backdrop-fade-enter-active,
+.backdrop-fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.backdrop-fade-enter-from,
+.backdrop-fade-leave-to {
+  opacity: 0;
+}
+
+/* ─── Content ─── */
 .content {
   margin-top: 1rem;
   display: grid;
   gap: 1rem;
 }
 
+/* ─── Panels ─── */
 .panel {
   border: 1px solid var(--border-color);
   border-radius: 24px;
   background: var(--bg-secondary);
   box-shadow: var(--shadow-soft);
   padding: clamp(1rem, 2.3vw, 1.6rem);
+  transition: border-color 0.25s ease;
 }
 
 .panel[id],
@@ -927,6 +1103,7 @@ onBeforeUnmount(() => {
   scroll-margin-top: 6.4rem;
 }
 
+/* ─── Hero ─── */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
@@ -962,6 +1139,7 @@ onBeforeUnmount(() => {
   gap: 0.7rem;
 }
 
+/* ─── Buttons ─── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -973,6 +1151,8 @@ onBeforeUnmount(() => {
   text-decoration: none;
   font-weight: 700;
   letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -991,12 +1171,34 @@ onBeforeUnmount(() => {
   box-shadow: 0 14px 34px rgba(242, 201, 76, 0.26);
 }
 
+.btn-primary:hover {
+  box-shadow: 0 18px 40px rgba(242, 201, 76, 0.38);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 25%, rgba(255, 255, 255, 0.3) 50%, transparent 75%);
+  transform: translateX(-110%);
+  transition: transform 0.55s ease;
+}
+
+.btn-primary:hover::after {
+  transform: translateX(110%);
+}
+
 .btn-secondary {
   color: var(--text-primary);
   border-color: var(--border-color);
   background: color-mix(in srgb, var(--bg-card-soft) 86%, transparent);
 }
 
+.btn-secondary:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 40%, var(--border-color));
+}
+
+/* ─── Hero bullets ─── */
 .hero-bullets {
   margin-top: 1rem;
   list-style: none;
@@ -1012,8 +1214,15 @@ onBeforeUnmount(() => {
   font-size: 0.78rem;
   color: var(--text-secondary);
   background: color-mix(in srgb, var(--bg-card-soft) 76%, transparent);
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
 
+.hero-bullets li:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* ─── Hero metrics ─── */
 .hero-metrics {
   margin-top: 1rem;
   display: grid;
@@ -1028,6 +1237,14 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, var(--bg-card-soft) 82%, transparent);
   display: grid;
   gap: 0.28rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.metric-card:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 40%, var(--border-color));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-color) 12%, transparent),
+    0 8px 24px rgba(242, 201, 76, 0.07);
+  transform: translateY(-2px);
 }
 
 .metric-card p {
@@ -1047,6 +1264,7 @@ onBeforeUnmount(() => {
   line-height: 1.55;
 }
 
+/* ─── Phone shell ─── */
 .phone-shell {
   border: 1px solid var(--border-color);
   border-radius: 30px;
@@ -1056,15 +1274,32 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
-.phone-shell::after {
-  content: '';
+.phone-glow-ring {
   position: absolute;
-  width: 180px;
-  height: 180px;
-  right: -70px;
-  top: -70px;
+  width: 260px;
+  height: 260px;
+  top: -90px;
+  right: -80px;
   border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent-color) 46%, transparent), transparent 74%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-color) 28%, transparent) 0%, transparent 68%);
+  pointer-events: none;
+  z-index: 0;
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.phone-dot-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--border-color) 60%, transparent) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
 }
 
 .phone-head {
@@ -1073,6 +1308,8 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   font-size: 0.82rem;
   color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
 }
 
 .phone-head strong {
@@ -1085,6 +1322,8 @@ onBeforeUnmount(() => {
   border-radius: 16px;
   background: color-mix(in srgb, var(--bg-card-soft) 82%, transparent);
   padding: 0.85rem;
+  position: relative;
+  z-index: 1;
 }
 
 .balance-card p {
@@ -1110,6 +1349,8 @@ onBeforeUnmount(() => {
   margin-top: 0.8rem;
   display: grid;
   gap: 0.6rem;
+  position: relative;
+  z-index: 1;
 }
 
 .entry-row {
@@ -1123,22 +1364,29 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, var(--bg-card-soft) 78%, transparent);
   animation: entry-slide-up 0.56s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--delay);
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-.entry-row p {
+.entry-row:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 30%, var(--border-color));
+  background: color-mix(in srgb, var(--bg-card-soft) 90%, transparent);
+}
+
+.entry-info p {
   font-size: 0.88rem;
   font-weight: 600;
 }
 
-.entry-row small {
+.entry-info small {
   display: block;
   margin-top: 0.15rem;
   color: var(--text-secondary);
   font-size: 0.72rem;
 }
 
-.entry-row .entry-amount {
+.entry-amount {
   font-size: 0.9rem;
+  flex-shrink: 0;
 }
 
 .entry-row.income .entry-amount {
@@ -1149,6 +1397,7 @@ onBeforeUnmount(() => {
   color: var(--danger-color);
 }
 
+/* ─── Section typography ─── */
 .section-tag {
   color: var(--accent-color);
   font-size: 0.8rem;
@@ -1169,6 +1418,7 @@ onBeforeUnmount(() => {
   line-height: 1.7;
 }
 
+/* ─── Pain grid ─── */
 .pain-grid {
   margin-top: 1rem;
   display: grid;
@@ -1187,6 +1437,14 @@ onBeforeUnmount(() => {
   padding: 1rem;
   display: grid;
   gap: 0.6rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.pain-card:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 35%, var(--border-color));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-color) 12%, transparent),
+    0 8px 24px rgba(242, 201, 76, 0.06);
+  transform: translateY(-2px);
 }
 
 .pain-card h3 {
@@ -1202,6 +1460,7 @@ onBeforeUnmount(() => {
   color: var(--text-primary);
 }
 
+/* ─── Feature layout ─── */
 .feature-layout {
   margin-top: 1rem;
   display: grid;
@@ -1217,10 +1476,11 @@ onBeforeUnmount(() => {
 .feature-tab {
   text-align: left;
   border: 1px solid var(--border-color);
+  border-left-width: 3px;
   background: var(--bg-card);
   color: inherit;
   border-radius: 15px;
-  padding: 0.9rem;
+  padding: 0.9rem 0.9rem 0.9rem calc(0.9rem - 2px);
   display: grid;
   gap: 0.36rem;
   cursor: pointer;
@@ -1229,10 +1489,13 @@ onBeforeUnmount(() => {
 
 .feature-tab:hover {
   transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent-color) 30%, var(--border-color));
+  border-left-color: color-mix(in srgb, var(--accent-color) 50%, var(--border-color));
 }
 
 .feature-tab.is-active {
-  border-color: var(--accent-color);
+  border-color: var(--border-color);
+  border-left-color: var(--accent-color);
   background: linear-gradient(
     145deg,
     color-mix(in srgb, var(--accent-soft) 70%, transparent),
@@ -1296,6 +1559,12 @@ onBeforeUnmount(() => {
   font-size: 0.75rem;
   color: var(--text-secondary);
   background: color-mix(in srgb, var(--bg-card-soft) 74%, transparent);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.preview-pill-list span:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
 }
 
 .preview-rows {
@@ -1323,6 +1592,7 @@ onBeforeUnmount(() => {
   font-size: 0.86rem;
 }
 
+/* ─── Screen swap transition ─── */
 .screen-swap-enter-active,
 .screen-swap-leave-active {
   transition: opacity 0.26s ease, transform 0.26s ease;
@@ -1334,6 +1604,7 @@ onBeforeUnmount(() => {
   transform: translateY(8px);
 }
 
+/* ─── Advanced flow section ─── */
 .advanced {
   background:
     linear-gradient(145deg, color-mix(in srgb, var(--accent-soft) 64%, transparent), transparent 45%),
@@ -1366,6 +1637,11 @@ onBeforeUnmount(() => {
   border-radius: 16px;
   background: var(--bg-card);
   padding: 0.95rem;
+  transition: border-color 0.25s ease;
+}
+
+.flow-graphic:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 30%, var(--border-color));
 }
 
 .flow-graphic-title {
@@ -1410,6 +1686,11 @@ onBeforeUnmount(() => {
   border-radius: 16px;
   background: var(--bg-card-soft);
   padding: 0.95rem;
+  transition: border-color 0.25s ease;
+}
+
+.flow-copy:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 30%, var(--border-color));
 }
 
 .flow-chip {
@@ -1431,6 +1712,7 @@ onBeforeUnmount(() => {
   line-height: 1.7;
 }
 
+/* ─── Trust / insight grid ─── */
 .trust-grid {
   margin-top: 1rem;
   display: grid;
@@ -1449,6 +1731,14 @@ onBeforeUnmount(() => {
   padding: 0.92rem;
   display: grid;
   gap: 0.45rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.trust-card:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 35%, var(--border-color));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-color) 12%, transparent),
+    0 8px 24px rgba(242, 201, 76, 0.06);
+  transform: translateY(-2px);
 }
 
 .trust-icon {
@@ -1465,6 +1755,7 @@ onBeforeUnmount(() => {
   font-size: 0.9rem;
 }
 
+/* ─── Audience / bottom layout ─── */
 .bottom-layout {
   align-items: stretch;
 }
@@ -1489,8 +1780,15 @@ onBeforeUnmount(() => {
   color: var(--text-secondary);
   line-height: 1.55;
   font-size: 0.9rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
 
+.audience-list li:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 30%, var(--border-color));
+  color: var(--text-primary);
+}
+
+/* ─── Footer / download ─── */
 .footer-panel {
   text-align: center;
 }
@@ -1513,6 +1811,8 @@ onBeforeUnmount(() => {
   justify-content: center;
   text-decoration: none;
   font-weight: 700;
+  position: relative;
+  overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
@@ -1526,11 +1826,11 @@ onBeforeUnmount(() => {
   background: color-mix(in srgb, var(--bg-card-soft) 90%, transparent);
 }
 
-.download-btn-ios.disabled {
-  opacity: 0.6;
-  pointer-events: none;
+.download-btn-ios:hover {
+  border-color: color-mix(in srgb, var(--accent-color) 40%, var(--border-color));
 }
 
+.download-btn-ios.disabled,
 .download-btn-android.disabled {
   opacity: 0.6;
   pointer-events: none;
@@ -1540,6 +1840,23 @@ onBeforeUnmount(() => {
   color: #1f1600;
   background: linear-gradient(120deg, var(--accent-color), #fbe182);
   box-shadow: 0 12px 28px rgba(242, 201, 76, 0.24);
+}
+
+.download-btn-android:hover {
+  box-shadow: 0 16px 36px rgba(242, 201, 76, 0.38);
+}
+
+.download-btn-android::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 25%, rgba(255, 255, 255, 0.28) 50%, transparent 75%);
+  transform: translateX(-110%);
+  transition: transform 0.55s ease;
+}
+
+.download-btn-android:hover::after {
+  transform: translateX(110%);
 }
 
 .footer-links {
@@ -1555,6 +1872,7 @@ onBeforeUnmount(() => {
   color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.9rem;
+  transition: color 0.2s ease;
 }
 
 .footer-links a:hover {
@@ -1574,6 +1892,7 @@ onBeforeUnmount(() => {
   color: var(--text-secondary);
 }
 
+/* ─── FAB ─── */
 .download-fab {
   position: fixed;
   right: clamp(0.8rem, 2vw, 1.6rem);
@@ -1599,6 +1918,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 18px 40px rgba(242, 201, 76, 0.42);
 }
 
+/* ─── Reveal animations ─── */
 .reveal {
   opacity: 1;
   transform: none;
@@ -1627,6 +1947,7 @@ onBeforeUnmount(() => {
   }
 }
 
+/* ─── Responsive ─── */
 @media (max-width: 1060px) {
   .hero,
   .feature-layout,
@@ -1650,27 +1971,71 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 880px) {
-  .topbar {
-    flex-wrap: wrap;
-    border-radius: 18px;
-    justify-content: space-between;
+  /* Show hamburger, hide desktop nav */
+  .hamburger {
+    display: flex;
   }
 
-  .nav-links {
-    width: 100%;
-    order: 3;
+  .toggle-text {
+    display: none;
+  }
+
+  .theme-toggle {
+    width: 42px;
+    min-height: 42px;
+    padding: 0;
     justify-content: center;
-    gap: 0.45rem;
-    padding: 0.25rem 0 0;
   }
 
-  .nav-links a {
-    font-size: 0.84rem;
+  /* Topbar: no more flex-wrap; brand + actions only in one row */
+  .topbar {
+    flex-wrap: nowrap;
+    border-radius: 18px;
   }
 
-  .nav-links a:not(.pill-link),
+  /* Mobile nav dropdown */
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--surface-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    padding: 0.5rem;
+    z-index: 95;
+    gap: 0.2rem;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-links.is-open {
+    display: flex;
+  }
+
+  .nav-links a:not(.pill-link) {
+    width: 100%;
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    white-space: normal;
+  }
+
   .nav-links .pill-link {
-    padding: 0.42rem 0.68rem;
+    margin-top: 0.3rem;
+    text-align: center;
+    padding: 0.7rem;
+    border-radius: 12px;
+  }
+
+  .nav-links a.is-active:not(.pill-link) {
+    background: color-mix(in srgb, var(--accent-soft) 85%, transparent);
+    color: var(--accent-color);
   }
 }
 
@@ -1698,14 +2063,6 @@ onBeforeUnmount(() => {
     width: 100%;
   }
 
-  .theme-toggle {
-    width: 100%;
-  }
-
-  .toggle-text {
-    display: inline;
-  }
-
   .download-fab {
     min-width: 120px;
     min-height: 46px;
@@ -1719,7 +2076,11 @@ onBeforeUnmount(() => {
   .feature-tab,
   .download-btn,
   .download-fab,
-  .theme-toggle {
+  .theme-toggle,
+  .phone-glow-ring,
+  .metric-card,
+  .pain-card,
+  .trust-card {
     animation: none !important;
     transition: none !important;
     transform: none !important;

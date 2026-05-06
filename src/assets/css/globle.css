@@ -58,3 +58,13 @@ button:active {
   background: rgba(242, 201, 76, 0.34);
   color: #10131e;
 }
+
+:focus-visible {
+  outline: 2px solid #f2c94c;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}

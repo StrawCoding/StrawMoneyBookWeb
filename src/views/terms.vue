@@ -3,7 +3,7 @@
     <div class="legal-container">
       <h1>StrawMoneyBook 服務條款（Terms of Service）</h1>
       <p>生效日期：2026-02-14</p>
-      <p>最後更新：2026-02-14</p>
+      <p>最後更新：2026-05-06</p>
       <p>提供者：StrawCoding（以下稱「我們」）</p>
       <p>聯絡方式：service@strawmb.com</p>
 

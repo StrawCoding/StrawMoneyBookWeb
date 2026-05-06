@@ -3,7 +3,7 @@
     <div class="legal-container">
       <h1>StrawMoneyBook 隱私權政策（Privacy Policy）</h1>
       <p>生效日期：2026-02-14</p>
-      <p>最後更新：2026-02-14</p>
+      <p>最後更新：2026-05-06</p>
       <p>資料控制者／提供者：StrawCoding</p>
       <p>聯絡方式：service@strawmb.com</p>
 
