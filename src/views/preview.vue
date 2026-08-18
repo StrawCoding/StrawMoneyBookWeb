@@ -1,9 +1,21 @@
 <template>
   <main class="preview-page">
     <div class="preview-container">
-      <h1>StrawMoneyBook 預先體驗版</h1>
+      <h1>StrawMoneyBook 網頁測試版</h1>
       <p class="intro">
-        歡迎搶先填寫預先體驗版表單，我們會依照填寫資訊通知你最新測試名額與版本消息。
+        網頁測試版會連到正式營運後端 <code>api.strawmb.com</code>，帳號、共同帳本與會員狀態與 App 相同。
+        這不是靜態展示頁；登入與雲端功能都會打真實 API。
+      </p>
+
+      <div class="actions primary-actions">
+        <a class="open-link primary" href="/app/" data-testid="hosted-web-test-link">
+          開啟網頁測試版
+        </a>
+        <RouterLink class="back-link" to="/">返回首頁</RouterLink>
+      </div>
+
+      <p class="note">
+        測試版位於 <code>https://www.strawmb.com/app/</code>。若要排隊取得後續測試名額，可繼續填下面表單。
       </p>
 
       <div class="form-wrap" role="region" aria-label="預先體驗版申請表單">
@@ -27,7 +39,6 @@
         >
           無法顯示？改用新分頁填寫
         </a>
-        <RouterLink class="back-link" to="/">返回首頁</RouterLink>
       </div>
     </div>
   </main>
@@ -58,11 +69,21 @@ h1 {
   letter-spacing: 0.015em;
 }
 
-.intro {
+.intro,
+.note {
   color: #d3dbf2;
   margin-bottom: 1.3rem;
   line-height: 1.75;
   max-width: 760px;
+}
+
+.note {
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+}
+
+code {
+  color: #f8df8f;
 }
 
 .form-wrap {
@@ -87,6 +108,10 @@ h1 {
   flex-wrap: wrap;
 }
 
+.primary-actions {
+  margin-bottom: 0.4rem;
+}
+
 .open-link,
 .back-link {
   display: inline-flex;
@@ -101,11 +126,23 @@ h1 {
   transition: transform 0.2s ease, border-color 0.22s ease, background 0.22s ease;
 }
 
+.open-link.primary {
+  background: #f8df8f;
+  color: #16120a;
+  border-color: #f8df8f;
+  font-weight: 700;
+}
+
 .open-link:hover,
 .back-link:hover {
   transform: translateY(-1px);
   border-color: rgba(248, 223, 143, 0.62);
   background: rgba(248, 223, 143, 0.08);
+}
+
+.open-link.primary:hover {
+  background: #ffe9a8;
+  border-color: #ffe9a8;
 }
 
 @media (max-width: 640px) {

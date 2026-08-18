@@ -1,0 +1,1 @@
+function i(n){return n==="borrow"?"borrow":"lend"}function u(n){return n==="1"||n==="true"}function t(n){return n?"1":"0"}function a(n={},e={}){return{...n,tab:i(e.tab),finished:t(!!e.showFinished)}}function s(n={},e={}){const r=a(n,e),o=String(e.name??"").trim();return o?r.name=o:delete r.name,r}export{u as a,a as b,s as c,i as n};
