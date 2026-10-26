@@ -1,7 +1,7 @@
 {
-  "version": "1.5.43",
+  "version": "1.5.45",
   "apiBase": "https://api.strawmb.com",
   "publicUrl": "https://www.strawmb.com/app/",
   "hashRouter": true,
-  "generatedAt": "2026-10-26T12:40:59.821Z"
+  "generatedAt": "2026-10-26T12:44:11.857Z"
 }
