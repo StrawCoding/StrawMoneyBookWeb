@@ -1,0 +1,1 @@
+import{k as s,l as a,I as o}from"./vendor-Dq7_ijTO.js";const r=["data-testid"],n={__name:"HabitatListGroup",props:{testId:{type:String,default:""}},setup(t){return(e,d)=>(s(),a("div",{class:"habitat-list-group","data-testid":t.testId||void 0},[o(e.$slots,"default")],8,r))}};export{n as _};
