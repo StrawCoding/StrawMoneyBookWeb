@@ -1,1 +1,0 @@
-function r(e){return String(e?.type??"").trim()!=="expense"||!Number(e?.is_reimbursable)?!1:String(e?.reimbursement_state??"none").trim().toLowerCase()!=="reimbursed"}function n(e){return r(e)?"tx-item--reimbursable":""}export{n as r};
